@@ -1,0 +1,13 @@
+.admin-nav {
+    display: flex;
+    justify-content: space-around;
+    padding: 12px;
+    border-top: 1px solid #316aff;
+    border-bottom: 2px solid #316aff;
+    font-weight: bold;
+}
+
+.admin-nav a {
+    color: black;
+    text-decoration: none;
+}

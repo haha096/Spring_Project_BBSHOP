@@ -1,0 +1,81 @@
+.product-container {
+    max-width: 1100px;      /* 최대 넓이 지정 */
+    margin: 0 auto;
+    transform: translateX(120px);
+    padding: 40px;
+    margin-bottom: 38px;
+}
+
+.product-top {
+    display: flex;
+    gap: 40px;
+    margin-bottom: 40px;
+}
+
+.product-image1 {
+    width: 300px;
+    height: 400px;
+    background-color: #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.product-info {
+    flex: 1;
+}
+
+.price {
+    font-size: 20px;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+.description {
+    margin: 10px 0;
+    color: #333;
+    line-height: 1.5;
+}
+
+.shipping {
+    margin-top: 16px;
+    font-size: 14px;
+    color: #666;
+}
+
+.quantity-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.button-group {
+    margin-top: 24px;
+    display: flex;
+    gap: 16px;
+}
+
+.buy-ebook {
+    background-color: #52d1c9;
+    color: white;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 6px;
+}
+
+.add-cart {
+    background-color: #4d97ff;
+    color: white;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 6px;
+}
+
+.review-section {
+    margin-top: 48px;
+}
+
+.review-item {
+    margin-bottom: 16px;
+}

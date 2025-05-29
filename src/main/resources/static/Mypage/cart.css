@@ -1,0 +1,113 @@
+.mypage-container {
+    display: flex;
+    padding: 40px;
+    gap: 40px;
+    margin-bottom: 300px;
+}
+
+.mypage-sidebar {
+    width: 180px;
+    height: 300px;
+    background-color: #74aaff;
+    padding: 20px 10px;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.mypage-sidebar a {
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+    padding-left: 10px;
+}
+
+.mypage-content {
+    flex: 1;
+}
+
+.mypage-content h2 {
+    font-size: 20px;
+    margin-bottom: 16px;
+}
+
+.cart-box {
+    border: 1px solid #74aaff;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.cart-item {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 10px 0;
+}
+
+.cart-img {
+    width: 120px;
+    height: 140px;
+    background-color: #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cart-detail {
+    flex: 1;
+    font-size: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.cart-buttons {
+    margin-top: 30px;
+    display: flex;
+    gap: 10px;
+}
+
+.buy-btn {
+    background-color: #4cd13a;
+    border: none;
+    padding: 8px 28px;
+    border-radius: 6px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.delete-btn {
+    background-color: #ff5a5a;
+    border: none;
+    padding: 8px 21px;
+    border-radius: 6px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.cart-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.buy-all {
+    background-color: #74aaff;
+    border: none;
+    padding: 10px 40px;
+    border-radius: 12px;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.total {
+    font-size: 18px;
+    font-weight: bold;
+}

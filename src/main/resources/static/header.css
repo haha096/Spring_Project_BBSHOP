@@ -1,0 +1,37 @@
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #74a9f7;
+    color: white;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.header-links {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.mypage-button{
+    color: white;
+    text-decoration: none;
+}
+
+.login-button {
+    background-color: white;
+    padding: 6px 12px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+}
+
+.login-button:hover {
+    background-color: #e0e0e0;
+}

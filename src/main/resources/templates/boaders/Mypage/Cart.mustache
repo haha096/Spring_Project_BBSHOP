@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>마이페이지 | BB Shop</title>
+    <link rel="stylesheet" href="/header.css">
+    <link rel="stylesheet" href="/Mypage/cart.css">
+</head>
+<body>
+
+{{> layouts/header}}
+
+<div class="mypage-container">
+    <aside class="mypage-sidebar">
+        <a href="/mypage">내정보</a>
+        <a href="/cart">장바구니</a>
+        <a href="/orders">구매내역</a>
+        <a href="#">ebook 장바구니</a>
+        <a href="#">ebook 구매내역</a>
+        <a href="#">배송/품절</a>
+        <a href="#">리뷰/한 줄평</a>
+    </aside>
+
+    <section class="mypage-content">
+        <h2>장바구니</h2>
+        <div class="cart-box">
+
+                <div class="cart-item">
+                    <div class="cart-img">[이미지 자리]</div>
+                    <div class="cart-detail">
+                        <div>가면산장 살인사건</div>
+                        <div>1 권</div>
+                        <div>12000 원</div>
+                    </div>
+                    <div class="cart-buttons">
+                        <button class="buy-btn">구매</button>
+                        <button class="delete-btn">삭제</button>
+                    </div>
+                </div>
+
+
+            <div class="cart-item">
+                <div class="cart-img">[이미지 자리]</div>
+                <div class="cart-detail">
+                    <div>가면산장 살인사건</div>
+                    <div>1 권</div>
+                    <div>12000 원</div>
+                </div>
+                <div class="cart-buttons">
+                    <button class="buy-btn">구매</button>
+                    <button class="delete-btn">삭제</button>
+                </div>
+            </div>
+
+            <div class="cart-item">
+                <div class="cart-img">[이미지 자리]</div>
+                <div class="cart-detail">
+                    <div>가면산장 살인사건</div>
+                    <div>1 권</div>
+                    <div>12000 원</div>
+                </div>
+                <div class="cart-buttons">
+                    <button class="buy-btn">구매</button>
+                    <button class="delete-btn">삭제</button>
+                </div>
+            </div>
+
+
+        </div>
+
+        <div class="cart-bottom">
+            <button class="buy-all">전체 구매</button>
+            <div class="total">총 금액 : 24000원</div>
+        </div>
+    </section>
+</div>
+
+{{> layouts/footer}}
+
+</body>
+<footer>
+    <link rel="stylesheet" href="/footer.css">
+</footer>
+</html>

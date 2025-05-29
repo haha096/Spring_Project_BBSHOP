@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>마이페이지 | BB Shop</title>
+    <link rel="stylesheet" href="/header.css">
+    <link rel="stylesheet" href="/Mypage/mypage.css">
+</head>
+<body>
+
+{{> layouts/header}}
+
+<div class="mypage-container">
+    <aside class="mypage-sidebar">
+        <a href="/mypage">내정보</a>
+        <a href="/cart">장바구니</a>
+        <a href="/orders">구매내역</a>
+        <a href="#">ebook 장바구니</a>
+        <a href="#">ebook 구매내역</a>
+        <a href="#">배송/품절</a>
+        <a href="#">리뷰/한 줄평</a>
+    </aside>
+
+    <section class="mypage-content">
+        <h2>내 정보</h2>
+        <div class="mypage-box">
+            <div class="mypage-info" id="mypage-id">아이디 : {{userId}}</div>
+            <div class="mypage-info" id="mypage-email">이메일 : {{email}}</div>
+            <div class="mypage-info" id="mypage-address">주소 : {{address}}</div>
+        </div>
+
+        <div class="mypage-links">
+            <div class="mypage-update">
+                <a href="#">아이디 수정</a> |
+                <a href="#">비밀번호 수정</a> |
+                <a href="#">이메일 수정</a>
+            </div>
+
+            <button class="user-secession">회원탈퇴</button>
+        </div>
+
+        <div class="address-register">
+            <a href="#">주소등록</a>
+        </div>
+    </section>
+</div>
+
+{{> layouts/footer}}
+
+</body>
+<footer>
+    <link rel="stylesheet" href="/footer.css">
+</footer>
+</html>

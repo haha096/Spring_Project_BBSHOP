@@ -1,0 +1,122 @@
+.page-layout {
+    display: flex;
+    padding: 20px;
+    align-items: flex-start; /* 정렬 기준 위쪽으로 */
+}
+
+.page-layout2{
+    padding: 20px;
+    align-items: flex-start;
+}
+
+/* 사이드바: 고정 높이 + 배너 높이 맞춤 */
+.sidebar {
+    width: 180px;
+    background-color: #74a9f7;
+    padding: 20px;
+    border-radius: 12px;
+    color: white;
+    height: 320px; /* 검색창 + 배너 높이 정도 */
+}
+
+.sidebar a {
+    display: block;
+    margin-bottom: 20px;
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+}
+
+/* 메인 콘텐츠 */
+.main-content {
+    flex-grow: 1;
+    margin-left: 20px;
+}
+
+.main-content2 {
+    margin-left: 20px;
+}
+
+/* 검색창 */
+.search-box {
+    margin-bottom: 10px;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1.5px solid #74a9f7;
+}
+
+/* 배너 */
+.banner {
+    height: 300px;
+    background-color: #dcdcdc;
+    margin-bottom: 20px;
+    border-radius: 12px;
+}
+
+/* 신작 섹션 */
+.newbook-section {
+    display: flex;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    gap: 30px;
+}
+
+.newbook-section h2 {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.newbook-grid {
+    gap: 20px;
+    justify-content: flex-start; /* 왼쪽 정렬 */
+}
+
+.newbook-card {
+    width: 180px;
+    height: 220px;
+    background-color: #ccc;
+    border-radius: 8px;
+}
+
+.newbook-list{
+    display: flex;
+    gap: 30px;
+}
+
+
+
+/* 베스트셀러 섹션 */
+.bestbook-section h2 {
+    font-size: 26px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    gap: 30px;
+}
+
+.bestbook-section{
+    margin-left: 20px;
+}
+
+.bestbook-grid {
+    display: flex;
+    gap: 20px;
+    justify-content: flex-start; /* 왼쪽 정렬 */
+}
+
+.bestbook-card {
+    width: 180px;
+    height: 220px;
+    background-color: #ccc;
+    border-radius: 8px;
+}
+
+.bestbook-list{
+    display: flex;
+    gap: 30px;
+}

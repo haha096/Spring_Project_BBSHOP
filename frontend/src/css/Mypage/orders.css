@@ -1,0 +1,65 @@
+.orders-box {
+    border: 1px solid #74aaff;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.order-item {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 10px 0;
+}
+
+.order-img {
+    width: 120px;
+    height: 160px;
+    background-color: #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.order-detail {
+    flex-grow: 1;
+}
+
+.order-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+}
+
+.status-btn {
+    background-color: #4d97ff;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: default;
+    font-size: 18px;
+}
+
+.status-btn.complete {
+    background-color: royalblue;
+}
+
+.order-delete-btn {
+    background-color: #f66;
+    color: white;
+    border: none;
+    padding: 6px 24px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.review-btn {
+    background-color: #90caf9;
+    color: black;
+    border: none;
+    padding: 6px 24px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 18px;
+}
