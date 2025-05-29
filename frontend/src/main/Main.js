@@ -29,7 +29,7 @@ function Main (){
                             <h2>따끈따끈 신작</h2>
                             <div className="newbook-list">
                                 <div className="newbook-grid">
-                                    <Link to="/product/1">
+                                    <Link to="/products/1">
                                         <div className="newbook-card"></div>
                                         <div className="newbook-card-title">가면산장 살인사건</div>
                                         <div className="newbook-card-price">12000원</div>
