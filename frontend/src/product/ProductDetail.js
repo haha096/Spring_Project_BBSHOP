@@ -1,7 +1,10 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
+import { useParams } from 'react-router-dom';
 import '../css/product/productdetail.css';
 
 function ProductDetail() {
+    const { id } = useParams(); // <-- URL에서 상품 ID 가져옴
+    const [product, setProduct] = useState(null);
     const [quantity, setQuantity] = useState(1);
 
     const reviews = [
@@ -9,19 +12,30 @@ function ProductDetail() {
         { user: 'user1', rating: 10, comment: '짱 재밌습니다' }
     ];
 
+    useEffect(() => {
+        fetch(`http://localhost:8080/api/admin/products/${id}`)
+            .then(res => res.json())
+            .then(data => {
+                console.log("📦 받아온 product:", data); // 여기를 확인!
+                setProduct(data);
+            })
+            .catch(err => {
+                console.error("상품 불러오기 실패:", err);
+            });
+    }, [id]);
+    if (!product || product.price === undefined) return <div>상품 정보를 불러오는 중...</div>;
+
     return (
         <div className="product-container">
             <div className="product-top">
                 <div className="product-image1">
-                    <img src="/images/sample.png" alt="상품 이미지" />
+                    <img src={product.imageUrl} alt={product.name} />
                 </div>
 
                 <div className="product-info">
-                    <h2>가면산장 살인사건</h2>
-                    <p className="price">12000원</p>
-                    <p className="description">
-                        어쩌고저쩌고저쩌고저쩌고저쩌고저쩌고 어쩌고저쩌고저쩌고 저쩌고...
-                    </p>
+                    <h2>{product.name}</h2>
+                    <p className="price">{product.price.toLocaleString()}원</p>
+                    <p className="description">{product.description}</p>
                     <p className="shipping">배송도착 예정일<br />12/30</p>
 
                     <div className="quantity-box">

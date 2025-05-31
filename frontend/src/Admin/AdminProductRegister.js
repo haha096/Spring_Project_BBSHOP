@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './admin_css/AdminProductRegister.css';
 import AdminHeader from "./admin_components/AdminHeader";
 import AdminNav from "./admin_components/AdminNav";
@@ -6,15 +6,19 @@ import {Link} from "react-router-dom";
 
 function AdminProductRegister() {
     const [category, setCategory] = useState('소설/시');
-    const [title, setTitle] = useState('');
-    const [price, setPrice] = useState('');
-    const [image, setImage] = useState(null);
+    const [products, setProducts] = useState([]);
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        // 상품 등록 처리 예정
-        alert(`등록 완료!\n장르: ${category}\n제목: ${title}\n가격: ${price}`);
-    };
+    const filteredProducts = products.filter((product) => product.category === category);
+
+    useEffect(() => {
+        fetch("http://localhost:8080/api/admin/products")
+            .then(res => res.json())
+            .then(data => {
+                console.log("📦 받아온 상품 데이터:", data); // <-- 구조 확인
+                setProducts(data);
+            })
+            .catch(err => console.error("상품 불러오기 실패:", err));
+    }, []);
 
     return (
         <div>
@@ -37,29 +41,33 @@ function AdminProductRegister() {
                 <main className="admin-product-content">
                     <div className="product-list">
 
-                        <div className="product">
-                            <div className="product-card">
-                                <div className="product-image" />
-                                <div className="product-title">가면산장 살인사건</div>
-                                <div className="product-price">12000원</div>
-                            </div>
-                        </div>
+                        {filteredProducts.length > 0 ? (
+                            filteredProducts.map(product => (
+                                <div className="product" key={product.id}>
+                                    <div className="product-card">
+                                        <div className="product-image">
+                                            <img
+                                                src={product.imageUrl.startsWith('/images/')
+                                                    ? process.env.PUBLIC_URL + product.imageUrl
+                                                    : product.imageUrl}
+                                                alt={product.name}
+                                                style={{
+                                                    width: '100%',
+                                                    height: '100%',
+                                                    objectFit: 'cover',
+                                                }}
+                                            />
+                                        </div>
+                                        <div className="product-title">{product.name}</div>
+                                        <div className="product-price">{product.price.toLocaleString()}원</div>
+                                    </div>
+                                </div>
+                            ))
+                        ) : (
+                            <p>등록된 상품이 없습니다.</p>
+                        )}
 
-                        <div className="product">
-                            <div className="product-card">
-                                <div className="product-image" />
-                                <div className="product-title">가면산장 살인사건</div>
-                                <div className="product-price">12000원</div>
-                            </div>
-                        </div>
 
-                        <div className="product">
-                            <div className="product-card">
-                                <div className="product-image" />
-                                <div className="product-title">가면산장 살인사건</div>
-                                <div className="product-price">12000원</div>
-                            </div>
-                        </div>
 
 
                     </div>

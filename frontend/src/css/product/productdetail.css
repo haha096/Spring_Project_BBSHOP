@@ -1,7 +1,7 @@
 .product-container {
     max-width: 1100px;      /* 최대 넓이 지정 */
-    margin: 0 auto;
-    transform: translateX(120px);
+    margin: 28px auto;
+    transform: translateX(160px);
     padding: 40px;
     margin-bottom: 38px;
 }
@@ -19,6 +19,14 @@
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.product-image1 img {
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+    object-fit: cover;
+    border-radius: 4px;
 }
 
 .product-info {
