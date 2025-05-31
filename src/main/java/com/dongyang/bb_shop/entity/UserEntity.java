@@ -23,7 +23,4 @@ public class UserEntity {
 
     private String email;
 
-    public String getPassword() {
-        return password;
-    }
 }
