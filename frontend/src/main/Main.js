@@ -1,9 +1,18 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import "../css/main/main.css"
 
 function Main (){
+    const [products, setProducts] = useState([]);
+
+    useEffect(() => {
+        fetch("http://localhost:8080/api/admin/products")
+            .then(res => res.json())
+            .then(data => setProducts(data))
+            .catch(err => console.error("상품 불러오기 실패:", err));
+    }, []);
+
     return(
         <div>
             <div className="main">
@@ -28,38 +37,23 @@ function Main (){
                         <div className="book-section">
                             <h2>따끈따끈 신작</h2>
                             <div className="newbook-list">
-                                <div className="newbook-grid">
-                                    <Link to="/products/1">
-                                        <div className="newbook-card"></div>
-                                        <div className="newbook-card-title">가면산장 살인사건</div>
-                                        <div className="newbook-card-price">12000원</div>
-                                    </Link>
-                                </div>
-                                <div className="newbook-grid">
-                                    <div className="newbook-card"></div>
-                                    <div className="newbook-card-title">셜록홈즈</div>
-                                    <div className="newbook-card-price">12000원</div>
-                                </div>
-                                <div className="newbook-grid">
-                                    <div className="newbook-card"></div>
-                                    <div className="newbook-card-title">셜록홈즈</div>
-                                    <div className="newbook-card-price">12000원</div>
-                                </div>
-                                <div className="newbook-grid">
-                                    <div className="newbook-card"></div>
-                                    <div className="newbook-card-title">셜록홈즈</div>
-                                    <div className="newbook-card-price">12000원</div>
-                                </div>
-                                <div className="newbook-grid">
-                                    <div className="newbook-card"></div>
-                                    <div className="newbook-card-title">셜록홈즈</div>
-                                    <div className="newbook-card-price">12000원</div>
-                                </div>
-                                <div className="newbook-grid">
-                                    <div className="newbook-card"></div>
-                                    <div className="newbook-card-title">셜록홈즈</div>
-                                    <div className="newbook-card-price">12000원</div>
-                                </div>
+                                {products.map(product => (
+                                    <div className="newbook-grid" key={product.id}>
+                                        <Link to={`/products/${product.id}`}>
+                                            <div className="newbook-card">
+                                                <img
+                                                    src={product.imageUrl.startsWith('/images/')
+                                                        ? process.env.PUBLIC_URL + product.imageUrl
+                                                        : product.imageUrl}
+                                                    alt={product.name}
+                                                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                                />
+                                            </div>
+                                            <div className="newbook-card-title">{product.name}</div>
+                                            <div className="newbook-card-price">{product.price}원</div>
+                                        </Link>
+                                    </div>
+                                ))}
                             </div>
                         </div>
                     </section>

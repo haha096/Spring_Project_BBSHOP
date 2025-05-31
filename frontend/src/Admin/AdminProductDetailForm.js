@@ -11,6 +11,7 @@ function AdminProductDetailForm() {
         description: '',
         image: null,
     });
+    const [previewUrl, setPreviewUrl] = useState(null);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -18,13 +19,43 @@ function AdminProductDetailForm() {
     };
 
     const handleFileChange = (e) => {
+        const file = e.target.files[0];
         setForm({ ...form, image: e.target.files[0] });
+
+        // 파일 미리보기 URL 생성
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            setPreviewUrl(reader.result); // Base64로 된 이미지
+        };
+        if (file) {
+            reader.readAsDataURL(file);
+        }
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        alert(`상품 등록: ${form.title}`);
-        // TODO: 백엔드 연동
+
+        const productData = {
+            name: form.title,
+            price: parseInt(form.price),
+            category: category,
+            description: form.description,
+            imageUrl: form.image ? `/images/${form.image.name}` : ""
+        };
+
+        const response = await fetch("http://localhost:8080/api/admin/products", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(productData)
+        });
+
+        if (response.ok) {
+            alert("상품 등록 성공!");
+        } else {
+            alert("등록 실패!");
+        }
     };
 
     const [category, setCategory] = useState('');
@@ -40,7 +71,17 @@ function AdminProductDetailForm() {
 
             <form className="product-detail-form" onSubmit={handleSubmit}>
                 <div className="left-panel">
-                    <div className="image-preview">[이미지 자리]</div>
+                    <div className="image-preview">
+                        {previewUrl ? (
+                            <img src={previewUrl} alt="미리보기" style={{
+                                width: '100%',
+                                height: '100%',
+                                objectFit: 'cover',
+                            }} />
+                        ) : (
+                            "[이미지 자리]"
+                        )}
+                    </div>
 
                     <div className="product-img">
                         <label className="product-img-file-title">

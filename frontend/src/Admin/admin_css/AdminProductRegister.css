@@ -55,8 +55,12 @@
 
 .product-image {
     width: 150px;
-    height: 180px;
+    height: 210px;
     background-color: #ccc;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .product-title,
