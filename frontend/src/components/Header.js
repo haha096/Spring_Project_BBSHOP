@@ -1,14 +1,47 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import "../css/components/header.css"
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import "../css/components/header.css";
 
 function Header() {
+    const [loggedIn, setLoggedIn] = useState(false);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        fetch("http://localhost:8080/api/users/check", {
+            method: "GET",
+            credentials: "include"
+        })
+            .then(res => {
+                if (res.ok) setLoggedIn(true);
+                else throw new Error();
+            })
+            .catch(() => setLoggedIn(false));
+    }, []);
+
+    const handleLogout = async () => {
+        const res = await fetch("http://localhost:8080/api/users/logout", {
+            method: "POST",
+            credentials: "include"
+        });
+
+        if (res.ok) {
+            alert("로그아웃 되었습니다.");
+            setLoggedIn(false);
+            navigate("/login");
+        }
+    };
+
     return (
         <header>
             <Link to="/" className="logo">BB Shop</Link>
             <div className="header-links">
-                <a href="/mypage" className="mypage-button">마이 페이지</a>
-                <a href="/login" className="login-button">로그인</a>
+                <Link to="/mypage" className="mypage-button">마이페이지</Link>
+
+                {loggedIn ? (
+                    <button onClick={handleLogout} className="logout-button">로그아웃</button>
+                ) : (
+                    <Link to="/login" className="login-button">로그인</Link>
+                )}
             </div>
         </header>
     );
