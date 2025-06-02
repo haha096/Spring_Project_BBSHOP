@@ -21,6 +21,9 @@ header {
 .mypage-button{
     color: white;
     text-decoration: none;
+    border: 0;
+    background-color: transparent;
+    font-size: 16px;
 }
 
 .login-button {

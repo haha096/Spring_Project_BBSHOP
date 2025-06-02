@@ -1,0 +1,54 @@
+.update-container {
+    max-width: 600px;
+    margin: 100px auto;
+    padding: 40px;
+    text-align: center;
+    margin-bottom: 280px;
+}
+
+.update-container h2 {
+    font-size: 28px;
+    margin-bottom: 40px;
+    font-weight: bold;
+}
+
+.update-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    border: 2px solid #7caeff;
+    padding: 30px;
+    margin-bottom: 50px;
+    border-radius: 4px;
+}
+
+.update-box label {
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.update-box input {
+    width: 300px;
+    height: 36px;
+    font-size: 16px;
+    padding: 6px 10px;
+    border: 2px solid #7caeff;
+    border-radius: 4px;
+    outline: none;
+}
+
+.update-button {
+    background-color: #7caeff;
+    color: white;
+    font-size: 18px;
+    padding: 12px 40px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.update-button:hover {
+    background-color: #5a8fe6;
+}

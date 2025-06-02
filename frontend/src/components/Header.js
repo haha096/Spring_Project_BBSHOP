@@ -18,6 +18,7 @@ function Header() {
             .catch(() => setLoggedIn(false));
     }, []);
 
+
     const handleLogout = async () => {
         const res = await fetch("http://localhost:8080/api/users/logout", {
             method: "POST",
@@ -31,11 +32,21 @@ function Header() {
         }
     };
 
+    const handleMyPageClick = (e) => {
+        e.preventDefault(); // 기본 이동 막고 조건에 따라 이동
+        if (!loggedIn) {
+            alert("로그인이 필요합니다!");
+            navigate("/login");
+        } else {
+            navigate("/mypage");
+        }
+    };
+
     return (
         <header>
             <Link to="/" className="logo">BB Shop</Link>
             <div className="header-links">
-                <Link to="/mypage" className="mypage-button">마이페이지</Link>
+                <button onClick={handleMyPageClick} className="mypage-button">마이페이지</button>
 
                 {loggedIn ? (
                     <button onClick={handleLogout} className="logout-button">로그아웃</button>

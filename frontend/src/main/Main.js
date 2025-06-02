@@ -92,6 +92,12 @@ function Main (){
                                     <div className="bestbook-card-title">가면산장 살인사건</div>
                                     <div className="bestbook-card-price">12000원</div>
                                 </div>
+                                <div className="bestbook-grid">
+                                    <div className="bestbook-card"></div>
+                                    <div className="bestbook-card-title">가면산장 살인사건</div>
+                                    <div className="bestbook-card-price">12000원</div>
+                                </div>
+
                             </div>
                         </div>
                     </section>

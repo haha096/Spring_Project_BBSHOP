@@ -1,11 +1,14 @@
 package com.dongyang.bb_shop.controller;
 
 import com.dongyang.bb_shop.dto.UserDto;
+import com.dongyang.bb_shop.entity.UserEntity;
 import com.dongyang.bb_shop.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/users")
@@ -26,7 +29,6 @@ public class UserController {
         boolean result = userService.login(dto.getUsername(), dto.getPassword());
 
         if (result) {
-            // 세션에 사용자 정보 저장
             session.setAttribute("loginUser", dto.getUsername());
         }
 
@@ -58,5 +60,28 @@ public class UserController {
             return ResponseEntity.status(401).body("NOT_LOGGED_IN");
         }
         return ResponseEntity.ok(loginUser);
+    }
+
+
+    //내정보 페이지에서 로그인된 유저의 정보를 보여주는 GetMapping
+    @GetMapping("/me")
+    public ResponseEntity<UserDto> getUserInfo(HttpSession session) {
+        String username = (String) session.getAttribute("loginUser");
+        if (username == null) {
+            return ResponseEntity.status(401).build();  // 로그인 안됨
+        }
+
+        Optional<UserEntity> userOpt = userService.findByUsername(username);
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        UserEntity user = userOpt.get();
+        UserDto dto = new UserDto();
+        dto.setUsername(user.getUsername());
+        dto.setEmail(user.getEmail());
+        dto.setPassword(user.getPassword());
+
+        return ResponseEntity.ok(dto);
     }
 }

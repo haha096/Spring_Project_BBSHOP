@@ -4,9 +4,10 @@ import com.dongyang.bb_shop.dto.UserDto;
 import com.dongyang.bb_shop.entity.UserEntity;
 import com.dongyang.bb_shop.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -28,5 +29,9 @@ public class UserService {
         return userRepository.findByUsername(username)
                 .map(user -> rawPassword.equals(user.getPassword()))  // 평문 비교
                 .orElse(false);
+    }
+
+    public Optional<UserEntity> findByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 }

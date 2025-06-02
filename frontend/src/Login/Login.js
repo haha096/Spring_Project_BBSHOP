@@ -33,7 +33,7 @@ function Login (){
 
         if (result === true) {
             alert("로그인 성공!");
-            window.location.href = "/mypage";  // 예시로 마이페이지 이동
+            window.location.href = "/";
         } else {
             alert("로그인 실패! 아이디/비번 확인하세요.");
         }
