@@ -18,7 +18,7 @@ public class UserService {
     public void signup(UserDto dto) {
         UserEntity user = new UserEntity();
         user.setUsername(dto.getUsername());
-        user.setPassword(passwordEncoder.encode(dto.getPassword()));
+        user.setPassword(dto.getPassword());
         user.setEmail(dto.getEmail());
 
         userRepository.save(user);
@@ -26,7 +26,7 @@ public class UserService {
 
     public boolean login(String username, String rawPassword) {
         return userRepository.findByUsername(username)
-                .map(user -> passwordEncoder.matches(rawPassword, user.getPassword()))
+                .map(user -> rawPassword.equals(user.getPassword()))  // 평문 비교
                 .orElse(false);
     }
 }

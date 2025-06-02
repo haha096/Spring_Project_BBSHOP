@@ -35,26 +35,24 @@ function AdminProductDetailForm() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const productData = {
+        const formData = new FormData();
+        formData.append("dto", new Blob([JSON.stringify({
             name: form.title,
             price: parseInt(form.price),
             category: category,
-            description: form.description,
-            imageUrl: form.image ? `/images/${form.image.name}` : ""
-        };
+            description: form.description
+        })], { type: "application/json" }));
+        formData.append("image", form.image); // 이미지 파일 추가
 
         const response = await fetch("http://localhost:8080/api/admin/products", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(productData)
+            body: formData
         });
 
         if (response.ok) {
             alert("상품 등록 성공!");
         } else {
-            alert("등록 실패!");
+            alert("상품 등록 실패!");
         }
     };
 

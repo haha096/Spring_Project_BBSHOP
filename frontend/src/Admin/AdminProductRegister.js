@@ -47,9 +47,7 @@ function AdminProductRegister() {
                                     <div className="product-card">
                                         <div className="product-image">
                                             <img
-                                                src={product.imageUrl.startsWith('/images/')
-                                                    ? process.env.PUBLIC_URL + product.imageUrl
-                                                    : product.imageUrl}
+                                                src={`http://localhost:8080${product.imageUrl}`}
                                                 alt={product.name}
                                                 style={{
                                                     width: '100%',

@@ -28,7 +28,9 @@ function Main (){
                         <div className="search-box">
                             <input type="text" placeholder="검색어를 입력해주세요" />
                         </div>
-                        <div className="banner"></div>
+                        <div className="banner">
+                            <img src="/images/main_page_title.png" alt="메인 배너"/>
+                        </div>
                     </section>
                 </div>
 
@@ -42,9 +44,7 @@ function Main (){
                                         <Link to={`/products/${product.id}`}>
                                             <div className="newbook-card">
                                                 <img
-                                                    src={product.imageUrl.startsWith('/images/')
-                                                        ? process.env.PUBLIC_URL + product.imageUrl
-                                                        : product.imageUrl}
+                                                    src={`http://localhost:8080${product.imageUrl}`}
                                                     alt={product.name}
                                                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                                 />

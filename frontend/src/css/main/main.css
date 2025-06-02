@@ -61,6 +61,11 @@
     border-radius: 12px;
 }
 
+.banner img {
+    width: 100%;
+    height: 100%;
+}
+
 /* 신작 섹션 */
 .newbook-section {
     font-size: 18px;
