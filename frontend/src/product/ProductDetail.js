@@ -1,16 +1,54 @@
 import React, {useEffect, useState} from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import '../css/product/productdetail.css';
 
 function ProductDetail() {
     const { id } = useParams(); // <-- URL에서 상품 ID 가져옴
     const [product, setProduct] = useState(null);
     const [quantity, setQuantity] = useState(1);
+    const navigate = useNavigate();
 
     const reviews = [
         { user: 'user1', rating: 10, comment: '짱 재밌습니다' },
         { user: 'user1', rating: 10, comment: '짱 재밌습니다' }
     ];
+
+    const handleAddToCart = () => {
+        console.log("🧪 handleAddToCart - product:", product);
+        if (!product || !product.id) {
+            alert("상품 정보가 아직 로드되지 않았습니다.");
+            return;
+        }
+
+        const item = {
+            productId: product.id,
+            name: product.name,
+            price: product.price,
+            quantity: quantity,
+            imageUrl: product.imageUrl
+        };
+
+        fetch("http://localhost:8080/api/cart/add", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            credentials: "include",
+            body: JSON.stringify(item)
+        })
+            .then(res => {
+                if (res.ok) {
+                    navigate("/cart");
+                } else {
+                    return res.text().then(text => {
+                        throw new Error(text || "장바구니 추가 실패");
+                    });
+                }
+            })
+            .catch(err => {
+                alert(err.message);
+            });
+    };
 
     useEffect(() => {
         fetch(`http://localhost:8080/api/admin/products/${id}`)
@@ -35,7 +73,7 @@ function ProductDetail() {
                 <div className="product-info">
                     <h2>{product.name}</h2>
                     <p className="price">{product.price.toLocaleString()}원</p>
-                    <p className="description">{product.description}</p>
+                    {/*<p className="description">{product.description}</p>*/}
                     <p className="shipping">배송도착 예정일<br />12/30</p>
 
                     <div className="quantity-box">
@@ -47,7 +85,9 @@ function ProductDetail() {
 
                     <div className="button-group">
                         <button className="buy-ebook">ebook 구매</button>
-                        <button className="add-cart">장바구니에 넣기</button>
+                        {product && (
+                            <button className="add-cart" onClick={handleAddToCart}>장바구니에 넣기</button>
+                        )}
                     </div>
                 </div>
             </div>

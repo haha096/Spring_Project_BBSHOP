@@ -12,8 +12,8 @@ function UpdateUsername() {
             return;
         }
 
-        fetch("http://localhost:8080/api/users/username", {
-            method: "PATCH",
+        fetch("http://localhost:8080/api/users/updateusername", {
+            method: "PUT",
             headers: {
                 "Content-Type": "application/json",
             },

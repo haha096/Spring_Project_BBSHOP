@@ -41,6 +41,7 @@ public class ProductService {
         dto.setCategory(entity.getCategory());
         dto.setDescription(entity.getDescription());
         dto.setImageUrl(entity.getImageUrl());
+        dto.setId(entity.getId());
 
         return dto;
     }

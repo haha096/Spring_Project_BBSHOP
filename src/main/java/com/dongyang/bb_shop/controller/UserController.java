@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -30,6 +31,12 @@ public class UserController {
 
         if (result) {
             session.setAttribute("loginUser", dto.getUsername());
+            Optional<UserEntity> user = userService.findByUsername(dto.getUsername());
+            user.ifPresent(u -> {
+                session.setAttribute("loginUserId", u.getId());
+                System.out.println("🧑 로그인된 사용자 ID: " + u.getId()); // ✅ 여기!
+            });
+
         }
 
         return ResponseEntity.ok(result);
@@ -83,5 +90,50 @@ public class UserController {
         dto.setPassword(user.getPassword());
 
         return ResponseEntity.ok(dto);
+    }
+
+    // 아이디 수정
+    @PutMapping("/updateusername")
+    public ResponseEntity<?> updateUsername(
+            HttpSession session,
+            @RequestBody Map<String, String> body
+    ) {
+        String currentUsername = (String) session.getAttribute("loginUser");
+        if (currentUsername == null) {
+            return ResponseEntity.status(401).body("로그인이 필요합니다.");
+        }
+
+        String newUsername = body.get("newUsername");
+
+        // 중복 확인
+        if (userService.findByUsername(newUsername).isPresent()) {
+            return ResponseEntity.status(409).body("이미 존재하는 아이디입니다.");
+        }
+
+        userService.updateUsername(currentUsername, newUsername);
+        session.setAttribute("loginUser", newUsername); // 세션 업데이트
+        return ResponseEntity.ok("아이디가 수정되었습니다.");
+    }
+
+    // 비밀번호 수정
+    @PutMapping("/updatepassword")
+    public ResponseEntity<?> updatePassword(
+            HttpSession session,
+            @RequestBody Map<String, String> body
+    ) {
+        String username = (String) session.getAttribute("loginUser");
+        if (username == null) {
+            return ResponseEntity.status(401).body("로그인이 필요합니다.");
+        }
+
+        String currentPw = body.get("currentPassword");
+        String newPw = body.get("newPassword");
+
+        boolean result = userService.updatePassword(username, currentPw, newPw);
+        if (!result) {
+            return ResponseEntity.status(403).body("현재 비밀번호가 틀렸습니다.");
+        }
+
+        return ResponseEntity.ok("비밀번호가 수정되었습니다.");
     }
 }

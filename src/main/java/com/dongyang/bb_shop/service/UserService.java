@@ -34,4 +34,29 @@ public class UserService {
     public Optional<UserEntity> findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
+
+    //아이디 수정
+    public void updateUsername(String currentUsername, String newUsername) {
+        Optional<UserEntity> userOpt = userRepository.findByUsername(currentUsername);
+        userOpt.ifPresent(user -> {
+            user.setUsername(newUsername);
+            userRepository.save(user);
+        });
+    }
+
+    //비밀번호 수정
+    public boolean updatePassword(String username, String currentPw, String newPw) {
+        Optional<UserEntity> userOpt = userRepository.findByUsername(username);
+
+        if (userOpt.isEmpty()) return false;
+        UserEntity user = userOpt.get();
+
+        if (!user.getPassword().equals(currentPw)) {
+            return false;
+        }
+
+        user.setPassword(newPw);
+        userRepository.save(user);
+        return true;
+    }
 }
