@@ -34,6 +34,6 @@ public class ProductEntity {
     @Column(name = "image_url", length = 255)
     private String imageUrl;
 
-    @Column(name = "time")
-    private LocalDateTime time = LocalDateTime.now();
+    @Column(name = "created_at")
+    private LocalDateTime created_at = LocalDateTime.now();
 }

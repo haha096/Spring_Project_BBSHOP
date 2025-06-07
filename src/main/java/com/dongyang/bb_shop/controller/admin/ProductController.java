@@ -34,6 +34,7 @@ public class ProductController {
         Path filepath = Paths.get(saveDir, filename);
 
         // 이미지 저장
+        Files.createDirectories(filepath.getParent());
         Files.copy(imageFile.getInputStream(), filepath, StandardCopyOption.REPLACE_EXISTING);
 
         // 이미지 경로 설정
