@@ -34,7 +34,7 @@ public class UserController {
             Optional<UserEntity> user = userService.findByUsername(dto.getUsername());
             user.ifPresent(u -> {
                 session.setAttribute("loginUserId", u.getId());
-                System.out.println("🧑 로그인된 사용자 ID: " + u.getId()); // ✅ 여기!
+                System.out.println("🧑 로그인된 사용자 ID: " + u.getId());
             });
 
         }

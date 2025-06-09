@@ -19,7 +19,7 @@ public class UserService {
     public void signup(UserDto dto) {
         UserEntity user = new UserEntity();
         user.setUsername(dto.getUsername());
-        user.setPassword(dto.getPassword());
+        user.setPassword(passwordEncoder.encode(dto.getPassword())); // 암호화 저장
         user.setEmail(dto.getEmail());
 
         userRepository.save(user);
@@ -27,7 +27,7 @@ public class UserService {
 
     public boolean login(String username, String rawPassword) {
         return userRepository.findByUsername(username)
-                .map(user -> rawPassword.equals(user.getPassword()))  // 평문 비교
+                .map(user -> passwordEncoder.matches(rawPassword, user.getPassword())) // 암호 비교
                 .orElse(false);
     }
 
@@ -35,7 +35,6 @@ public class UserService {
         return userRepository.findByUsername(username);
     }
 
-    //아이디 수정
     public void updateUsername(String currentUsername, String newUsername) {
         Optional<UserEntity> userOpt = userRepository.findByUsername(currentUsername);
         userOpt.ifPresent(user -> {
@@ -44,18 +43,17 @@ public class UserService {
         });
     }
 
-    //비밀번호 수정
     public boolean updatePassword(String username, String currentPw, String newPw) {
         Optional<UserEntity> userOpt = userRepository.findByUsername(username);
 
         if (userOpt.isEmpty()) return false;
         UserEntity user = userOpt.get();
 
-        if (!user.getPassword().equals(currentPw)) {
+        if (!passwordEncoder.matches(currentPw, user.getPassword())) {
             return false;
         }
 
-        user.setPassword(newPw);
+        user.setPassword(passwordEncoder.encode(newPw)); // 새 비번 암호화
         userRepository.save(user);
         return true;
     }
