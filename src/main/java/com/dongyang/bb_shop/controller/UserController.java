@@ -5,8 +5,17 @@ import com.dongyang.bb_shop.entity.UserEntity;
 import com.dongyang.bb_shop.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import java.util.Map;
 import java.util.Optional;
@@ -34,9 +43,30 @@ public class UserController {
             Optional<UserEntity> user = userService.findByUsername(dto.getUsername());
             user.ifPresent(u -> {
                 session.setAttribute("loginUserId", u.getId());
-                System.out.println("🧑 로그인된 사용자 ID: " + u.getId());
-            });
+                session.setAttribute("loginUser", u.getUsername());
 
+                List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+                if (u.isAdmin()) {
+                    authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+                } else {
+                    authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+                }
+
+                Authentication auth = new UsernamePasswordAuthenticationToken(
+                        u.getUsername(),
+                        u.getPassword(),
+                        authorities
+                );
+
+                SecurityContext context = SecurityContextHolder.createEmptyContext();
+                context.setAuthentication(auth);
+                SecurityContextHolder.setContext(context);
+
+                //세션에 SecurityContext 저장
+                session.setAttribute("SPRING_SECURITY_CONTEXT", context);
+
+                System.out.println("SecurityContext 등록 완료: " + auth.getAuthorities());
+            });
         }
 
         return ResponseEntity.ok(result);
@@ -89,6 +119,7 @@ public class UserController {
         dto.setEmail(user.getEmail());
         dto.setPassword(user.getPassword());
 
+
         return ResponseEntity.ok(dto);
     }
 
@@ -135,5 +166,15 @@ public class UserController {
         }
 
         return ResponseEntity.ok("비밀번호가 수정되었습니다.");
+    }
+
+    //관리자 계정일 경우 /admin으로 들어갈수 있는 GetMapping
+    @GetMapping("/is-admin")
+    public ResponseEntity<Boolean> checkAdmin(Authentication authentication) {
+        if (authentication != null && authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
+            return ResponseEntity.ok(true);
+        }
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(false);
     }
 }

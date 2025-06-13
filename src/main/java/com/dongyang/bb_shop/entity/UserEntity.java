@@ -21,6 +21,10 @@ public class UserEntity {
     @Column(nullable = false)
     private String password;
 
+
     private String email;
+
+    @Column(name = "is_admin")
+    private boolean isAdmin;
 
 }

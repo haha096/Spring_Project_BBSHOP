@@ -1,9 +1,24 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import './admin_css/AdminUserList.css';
 import AdminHeader from "./admin_components/AdminHeader";
 import AdminNav from "./admin_components/AdminNav";
+import {useNavigate} from "react-router-dom";
 
 function AdminUserList() {
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        fetch("http://localhost:8080/api/users/is-admin", {
+            credentials: "include"
+        })
+            .then(res => {
+                if (!res.ok) {
+                    alert("관리자만 접근할 수 있는 페이지입니다.");
+                    navigate("/");  // 홈으로 리디렉트
+                }
+            });
+    }, []);
+
     return (
         <div>
             <AdminHeader />
