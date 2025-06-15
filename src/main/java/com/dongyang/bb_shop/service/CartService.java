@@ -43,7 +43,7 @@ public class CartService {
         return cartRepository.findByUserId(userId);
     }
 
-    @Transactional
+
     public void deleteItem(Long userId, Long productId) {
         cartRepository.deleteByUserIdAndProductId(userId, productId);
     }
