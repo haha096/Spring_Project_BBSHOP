@@ -7,6 +7,7 @@ import com.dongyang.bb_shop.repository.CartRepository;
 import com.dongyang.bb_shop.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -42,10 +43,12 @@ public class CartService {
         return cartRepository.findByUserId(userId);
     }
 
+    @Transactional
     public void deleteItem(Long userId, Long productId) {
         cartRepository.deleteByUserIdAndProductId(userId, productId);
     }
 
+    @Transactional
     public void clearCart(Long userId) {
         cartRepository.findByUserId(userId)
                 .forEach(item -> cartRepository.deleteById(item.getId()));

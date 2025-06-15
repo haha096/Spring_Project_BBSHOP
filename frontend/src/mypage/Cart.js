@@ -5,7 +5,8 @@ function Cart() {
     const [cartItems, setCartItems] = useState([]);
     const [total, setTotal] = useState(0);
 
-    useEffect(() => {
+    //장바구니 목록 불러오기 함수
+    const fetchCartItems = () => {
         fetch("http://localhost:8080/api/cart", {
             credentials: "include"
         })
@@ -19,7 +20,45 @@ function Cart() {
                 setTotal(sum);
             })
             .catch(err => alert(err.message));
+    };
+
+    useEffect(() => {
+        fetchCartItems();
     }, []);
+
+    //개별 상품 삭제 함수
+    const handleDeleteItem = async (productId) => {
+        if (!window.confirm("정말 이 상품을 삭제하시겠습니까?")) return;
+
+        const res = await fetch(`http://localhost:8080/api/cart/delete/${productId}`, {
+            method: "DELETE",
+            credentials: "include"
+        });
+
+        if (res.ok) {
+            alert("상품이 삭제되었습니다.");
+            fetchCartItems(); // 새로고침
+        } else {
+            alert("삭제 실패");
+        }
+    };
+
+    //장바구니 전체 비우기 함수
+    const handleClearCart = async () => {
+        if (!window.confirm("정말 장바구니를 비우시겠습니까?")) return;
+
+        const res = await fetch("http://localhost:8080/api/cart/clear", {
+            method: "DELETE",
+            credentials: "include"
+        });
+
+        if (res.ok) {
+            alert("장바구니를 비웠습니다.");
+            fetchCartItems();
+        } else {
+            alert("비우기 실패");
+        }
+    };
 
     return (
         <div className="mypage-container">
@@ -49,7 +88,7 @@ function Cart() {
                             </div>
                             <div className="cart-buttons">
                                 <button className="buy-btn">구매</button>
-                                <button className="delete-btn">삭제</button>
+                                <button className="delete-btn" onClick={() => handleDeleteItem(item.productId)}>삭제</button>
                             </div>
                         </div>
                     ))}
@@ -57,7 +96,7 @@ function Cart() {
                 </div>
 
                 <div className="cart-bottom">
-                    <button className="buy-all">전체 구매</button>
+                    <button className="buy-all" onClick={handleClearCart}>전체 비우기</button>
                     <div className="total">총 금액 : {total.toLocaleString()}원</div>
                 </div>
             </section>
