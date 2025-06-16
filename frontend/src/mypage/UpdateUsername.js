@@ -12,27 +12,34 @@ function UpdateUsername() {
             return;
         }
 
+        // JWT 토큰 가져오기 (localStorage에서 꺼내기)
+        const token = localStorage.getItem("token");
+        if (!token) {
+            alert("로그인이 필요합니다.");
+            return;
+        }
+
         fetch("http://localhost:8080/api/users/updateusername", {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("token")}`, // 기존 토큰 전송
             },
-            credentials: "include",
             body: JSON.stringify({ newUsername }),
         })
-            .then(res => {
-                if (res.ok) {
+            .then(res => res.json())
+            .then(data => {
+                if (data.token) {
+                    localStorage.setItem("token", data.token); //토큰 갱신
                     alert("아이디가 성공적으로 변경되었습니다!");
                     navigate("/mypage");
                 } else {
-                    return res.text().then(text => {
-                        throw new Error(text || "아이디 변경 실패");
-                    });
+                    throw new Error("토큰 없음");
                 }
             })
             .catch(err => {
                 console.error(err);
-                alert("아이디 변경에 실패했습니다.");
+                alert("아이디 변경 실패: " + err.message);
             });
     };
 

@@ -25,17 +25,22 @@ function Login (){
             body: JSON.stringify({
                 username: form.userId,
                 password: form.password
-            }),
-            credentials: "include" // ✅ 세션 쿠키 포함!
+            })
         });
+
+        if (!response.ok) {
+            alert("로그인 실패! 아이디/비번 확인하세요.");
+            return;
+        }
 
         const result = await response.json();
 
-        if (result === true) {
+        if (result.token) {
+            localStorage.setItem("token", result.token); //토큰 저장
             alert("로그인 성공!");
-            window.location.href = "/";
+            window.location.href = "/"; // 또는 navigate("/")
         } else {
-            alert("로그인 실패! 아이디/비번 확인하세요.");
+            alert("로그인 실패! 응답이 이상합니다.");
         }
     };
 

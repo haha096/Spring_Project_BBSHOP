@@ -20,6 +20,12 @@ function ProductDetail() {
             return;
         }
 
+        const token = localStorage.getItem("token");
+        if (!token) {
+            alert("로그인이 필요합니다.");
+            return;
+        }
+
         const item = {
             productId: product.id,
             name: product.name,
@@ -31,9 +37,9 @@ function ProductDetail() {
         fetch("http://localhost:8080/api/cart/add", {
             method: "POST",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
             },
-            credentials: "include",
             body: JSON.stringify(item)
         })
             .then(res => {
@@ -51,10 +57,10 @@ function ProductDetail() {
     };
 
     useEffect(() => {
-        fetch(`http://localhost:8080/api/admin/products/${id}`)
+        fetch(`http://localhost:8080/api/products/public/${id}`)
             .then(res => res.json())
             .then(data => {
-                console.log("📦 받아온 product:", data); // 여기를 확인!
+                console.log("📦 받아온 product:", data);
                 setProduct(data);
             })
             .catch(err => {

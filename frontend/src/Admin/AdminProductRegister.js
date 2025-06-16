@@ -11,13 +11,25 @@ function AdminProductRegister() {
     const filteredProducts = products.filter((product) => product.category === category);
 
     useEffect(() => {
-        fetch("http://localhost:8080/api/admin/products")
-            .then(res => res.json())
+        const token = localStorage.getItem("token");
+
+        fetch("http://localhost:8080/api/admin/products", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}` //이거 꼭 필요함
+            }
+        })
+            .then(res => {
+                if (!res.ok) throw new Error("상품 불러오기 실패");
+                return res.json();
+            })
             .then(data => {
-                console.log("📦 받아온 상품 데이터:", data); // <-- 구조 확인
                 setProducts(data);
             })
-            .catch(err => console.error("상품 불러오기 실패:", err));
+            .catch(err => {
+                console.error("상품 불러오기 에러:", err);
+            });
     }, []);
 
     return (

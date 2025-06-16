@@ -45,4 +45,9 @@ public class ProductService {
 
         return dto;
     }
+
+    public ProductEntity getProductByIdEntity(Long id) {
+        return productRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("상품을 찾을 수 없습니다: " + id));
+    }
 }

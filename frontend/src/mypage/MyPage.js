@@ -11,25 +11,19 @@ function MyPage() {
 
     //로그인된 유저정보를 가져오기 위한 useEffect
     useEffect(() => {
-        fetch("http://localhost:8080/api/users/me", {
-            method: "GET",
-            credentials: "include"
-        })
-            .then(res => {
-                if (res.status === 401) {
-                    alert("로그인이 필요합니다.");
-                    navigate("/login");
-                }
-                return res.json();
-            })
-            .then(data => setUser(data));
-    }, []);
+        const token = localStorage.getItem("token");
 
-    //로그인된 유저정보를 쓰기 위한 useEffect
-    useEffect(() => {
+        if (!token) {
+            alert("로그인이 필요합니다.");
+            navigate("/login");
+            return;
+        }
+
         fetch("http://localhost:8080/api/users/me", {
             method: "GET",
-            credentials: "include"
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
         })
             .then(res => {
                 if (res.status === 401) {
@@ -43,8 +37,13 @@ function MyPage() {
                 if (data) {
                     setUserId(data.username);
                     setEmail(data.email);
-                    // setAddress(data.address); // 만약 주소 필드가 있으면 여기서 설정
+                    // setAddress(data.address); // 필요하면 여기서 세팅
                 }
+            })
+            .catch(err => {
+                console.error("유저 정보 불러오기 실패:", err);
+                alert("오류 발생. 다시 로그인 해주세요.");
+                navigate("/login");
             });
     }, []);
 

@@ -2,6 +2,8 @@ package com.dongyang.bb_shop.controller;
 
 import com.dongyang.bb_shop.dto.UserDto;
 import com.dongyang.bb_shop.entity.UserEntity;
+import com.dongyang.bb_shop.jwt.JwtUtil;
+import com.dongyang.bb_shop.repository.UserRepository;
 import com.dongyang.bb_shop.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +29,8 @@ import java.util.Optional;
 public class UserController {
 
     private final UserService userService;
+    private final JwtUtil jwtUtil;
+    private final UserRepository userRepository;
 
     @PostMapping("/signup")
     public ResponseEntity<Void> signup(@RequestBody UserDto dto) {
@@ -35,41 +39,20 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Boolean> login(@RequestBody UserDto dto, HttpSession session) {
-        boolean result = userService.login(dto.getUsername(), dto.getPassword());
+    public ResponseEntity<?> login(@RequestBody UserDto dto) {
+        Optional<UserEntity> userOpt = userService.authenticate(dto.getUsername(), dto.getPassword());
 
-        if (result) {
-            session.setAttribute("loginUser", dto.getUsername());
-            Optional<UserEntity> user = userService.findByUsername(dto.getUsername());
-            user.ifPresent(u -> {
-                session.setAttribute("loginUserId", u.getId());
-                session.setAttribute("loginUser", u.getUsername());
-
-                List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-                if (u.isAdmin()) {
-                    authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-                } else {
-                    authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-                }
-
-                Authentication auth = new UsernamePasswordAuthenticationToken(
-                        u.getUsername(),
-                        u.getPassword(),
-                        authorities
-                );
-
-                SecurityContext context = SecurityContextHolder.createEmptyContext();
-                context.setAuthentication(auth);
-                SecurityContextHolder.setContext(context);
-
-                //세션에 SecurityContext 저장
-                session.setAttribute("SPRING_SECURITY_CONTEXT", context);
-
-                System.out.println("SecurityContext 등록 완료: " + auth.getAuthorities());
-            });
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.status(401).body("로그인 실패");
         }
 
-        return ResponseEntity.ok(result);
+        UserEntity user = userOpt.get();
+        String role = user.isAdmin() ? "ROLE_ADMIN" : "ROLE_USER";
+
+        // JWT 토큰 생성
+        String token = jwtUtil.generateToken(user.getUsername(), role);
+
+        return ResponseEntity.ok(Map.of("token", token));
     }
 
     @GetMapping("/mypage")
@@ -91,49 +74,33 @@ public class UserController {
 
 
     @GetMapping("/check")
-    public ResponseEntity<String> checkLogin(HttpSession session) {
-        String loginUser = (String) session.getAttribute("loginUser");
-        if (loginUser == null) {
-            return ResponseEntity.status(401).body("NOT_LOGGED_IN");
+    public ResponseEntity<?> checkLogin(Authentication auth) {
+        if (auth != null && auth.isAuthenticated()) {
+            return ResponseEntity.ok(true);
         }
-        return ResponseEntity.ok(loginUser);
+        return ResponseEntity.status(401).body(false);
     }
 
 
     //내정보 페이지에서 로그인된 유저의 정보를 보여주는 GetMapping
     @GetMapping("/me")
-    public ResponseEntity<UserDto> getUserInfo(HttpSession session) {
-        String username = (String) session.getAttribute("loginUser");
-        if (username == null) {
-            return ResponseEntity.status(401).build();  // 로그인 안됨
-        }
+    public ResponseEntity<UserDto> getUserInfo(Authentication auth) {
+        String username = auth.getName(); // JWT에서 가져옴
 
-        Optional<UserEntity> userOpt = userService.findByUsername(username);
-        if (userOpt.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
+        UserEntity user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("사용자 없음"));
 
-        UserEntity user = userOpt.get();
-        UserDto dto = new UserDto();
-        dto.setUsername(user.getUsername());
-        dto.setEmail(user.getEmail());
-        dto.setPassword(user.getPassword());
-
-
+        UserDto dto = new UserDto(user);
         return ResponseEntity.ok(dto);
     }
 
     // 아이디 수정
     @PutMapping("/updateusername")
     public ResponseEntity<?> updateUsername(
-            HttpSession session,
+            Authentication auth,
             @RequestBody Map<String, String> body
     ) {
-        String currentUsername = (String) session.getAttribute("loginUser");
-        if (currentUsername == null) {
-            return ResponseEntity.status(401).body("로그인이 필요합니다.");
-        }
-
+        String currentUsername = auth.getName();  // 세션 말고 JWT에서 추출
         String newUsername = body.get("newUsername");
 
         // 중복 확인
@@ -142,20 +109,20 @@ public class UserController {
         }
 
         userService.updateUsername(currentUsername, newUsername);
-        session.setAttribute("loginUser", newUsername); // 세션 업데이트
-        return ResponseEntity.ok("아이디가 수정되었습니다.");
+
+        // 🔑 새 JWT 토큰 재발급
+        String newToken = jwtUtil.generateToken(newUsername, "ROLE_USER");
+
+        return ResponseEntity.ok(Map.of("token", newToken));
     }
 
     // 비밀번호 수정
     @PutMapping("/updatepassword")
     public ResponseEntity<?> updatePassword(
-            HttpSession session,
+            Authentication auth,
             @RequestBody Map<String, String> body
     ) {
-        String username = (String) session.getAttribute("loginUser");
-        if (username == null) {
-            return ResponseEntity.status(401).body("로그인이 필요합니다.");
-        }
+        String username = auth.getName();  // 세션X → JWT로부터 추출
 
         String currentPw = body.get("currentPassword");
         String newPw = body.get("newPassword");
@@ -165,7 +132,9 @@ public class UserController {
             return ResponseEntity.status(403).body("현재 비밀번호가 틀렸습니다.");
         }
 
-        return ResponseEntity.ok("비밀번호가 수정되었습니다.");
+        // 🔑 새 토큰 재발급
+        String newToken = jwtUtil.generateToken(username, "ROLE_USER");
+        return ResponseEntity.ok(Map.of("token", newToken));
     }
 
     //관리자 계정일 경우 /admin으로 들어갈수 있는 GetMapping

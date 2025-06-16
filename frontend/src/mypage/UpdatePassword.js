@@ -15,31 +15,38 @@ function UpdatePassword() {
             return;
         }
 
+        const token = localStorage.getItem("token");
+        if (!token) {
+            alert("로그인이 필요합니다.");
+            return;
+        }
+
         fetch("http://localhost:8080/api/users/updatepassword", {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("token")}`, // 기존 토큰 포함
             },
-            credentials: "include",
             body: JSON.stringify({
                 currentPassword: currentPw,
                 newPassword: newPw
             }),
         })
-            .then((res) => {
-                if (res.ok) {
-                    alert("비밀번호가 수정되었습니다.");
+            .then((res) => res.json())
+            .then((data) => {
+                if (data.token) {
+                    localStorage.setItem("token", data.token);  // ✅ 토큰 갱신
+                    alert("비밀번호가 성공적으로 변경되었습니다!");
                     navigate("/mypage");
                 } else {
-                    return res.text().then((text) => {
-                        throw new Error(text || "비밀번호 수정 실패");
-                    });
+                    throw new Error("토큰이 반환되지 않았습니다.");
                 }
             })
             .catch((err) => {
-                alert(err.message);  // ex: "현재 비밀번호가 틀렸습니다." 등
+                alert("비밀번호 변경 실패: " + err.message);
             });
     };
+
     return (
         <div className="pw-update-container">
             <h2>비밀번호 수정</h2>

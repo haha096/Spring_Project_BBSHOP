@@ -1,15 +1,39 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 
 import "../css/main/main.css"
 
 function Main (){
     const [products, setProducts] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
-        fetch("http://localhost:8080/api/admin/products")
-            .then(res => res.json())
-            .then(data => setProducts(data))
+        const token = localStorage.getItem("token");
+        console.log("토큰:", token);
+
+        const headers = {
+            "Content-Type": "application/json"
+        };
+
+        // ✅ 인증 없어도 되는 API니까 이 조건 자체 생략 가능!
+        // 하지만 혹시 future-proof로 남기고 싶다면 아래처럼
+        if (token) {
+            headers.Authorization = `Bearer ${token}`;
+        }
+
+        fetch("http://localhost:8080/api/products", {
+            method: "GET",
+            headers: headers
+        })
+            .then(res => {
+                console.log("응답 상태 코드:", res.status);  // 여기 상태 꼭 봐봐
+                if (!res.ok) throw new Error("서버 응답 오류");
+                return res.json();
+            })
+            .then(data => {
+                console.log("받은 상품 목록:", data);
+                setProducts(data);
+            })
             .catch(err => console.error("상품 불러오기 실패:", err));
     }, []);
 

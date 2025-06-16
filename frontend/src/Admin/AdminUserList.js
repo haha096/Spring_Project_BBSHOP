@@ -8,8 +8,13 @@ function AdminUserList() {
     const navigate = useNavigate();
 
     useEffect(() => {
+        const token = localStorage.getItem("token");
+
         fetch("http://localhost:8080/api/users/is-admin", {
-            credentials: "include"
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
         })
             .then(res => {
                 if (!res.ok) {

@@ -25,10 +25,9 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public boolean login(String username, String rawPassword) {
+    public Optional<UserEntity> authenticate(String username, String password) {
         return userRepository.findByUsername(username)
-                .map(user -> passwordEncoder.matches(rawPassword, user.getPassword())) // 암호 비교
-                .orElse(false);
+                .filter(user -> passwordEncoder.matches(password, user.getPassword()));
     }
 
     public Optional<UserEntity> findByUsername(String username) {

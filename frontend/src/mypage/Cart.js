@@ -5,10 +5,19 @@ function Cart() {
     const [cartItems, setCartItems] = useState([]);
     const [total, setTotal] = useState(0);
 
-    //장바구니 목록 불러오기 함수
+    //토큰 불러오기
+    const token = localStorage.getItem("token"); // 또는 sessionStorage
+
+    //공통 fetch 옵션
+    const getAuthHeader = () => ({
+        headers: {
+            "Authorization": `Bearer ${token}`
+        }
+    });
+
     const fetchCartItems = () => {
         fetch("http://localhost:8080/api/cart", {
-            credentials: "include"
+            ...getAuthHeader(),
         })
             .then(res => {
                 if (!res.ok) throw new Error("로그인이 필요합니다.");
@@ -26,30 +35,28 @@ function Cart() {
         fetchCartItems();
     }, []);
 
-    //개별 상품 삭제 함수
     const handleDeleteItem = async (productId) => {
         if (!window.confirm("정말 이 상품을 삭제하시겠습니까?")) return;
 
         const res = await fetch(`http://localhost:8080/api/cart/delete/${productId}`, {
             method: "DELETE",
-            credentials: "include"
+            ...getAuthHeader(),
         });
 
         if (res.ok) {
             alert("상품이 삭제되었습니다.");
-            fetchCartItems(); // 새로고침
+            fetchCartItems();
         } else {
             alert("삭제 실패");
         }
     };
 
-    //장바구니 전체 비우기 함수
     const handleClearCart = async () => {
         if (!window.confirm("정말 장바구니를 비우시겠습니까?")) return;
 
         const res = await fetch("http://localhost:8080/api/cart/clear", {
             method: "DELETE",
-            credentials: "include"
+            ...getAuthHeader(),
         });
 
         if (res.ok) {

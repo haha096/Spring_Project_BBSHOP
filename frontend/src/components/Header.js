@@ -7,9 +7,13 @@ function Header() {
     const navigate = useNavigate();
 
     useEffect(() => {
+        const token = localStorage.getItem("token");
+
         fetch("http://localhost:8080/api/users/check", {
             method: "GET",
-            credentials: "include"
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
         })
             .then(res => {
                 if (res.ok) setLoggedIn(true);
@@ -20,16 +24,12 @@ function Header() {
 
 
     const handleLogout = async () => {
-        const res = await fetch("http://localhost:8080/api/users/logout", {
-            method: "POST",
-            credentials: "include"
-        });
+        // localStorage 토큰 제거
+        localStorage.removeItem("token");
 
-        if (res.ok) {
-            alert("로그아웃 되었습니다.");
-            setLoggedIn(false);
-            navigate("/login");
-        }
+        alert("로그아웃 되었습니다.");
+        setLoggedIn(false);
+        navigate("/login");
     };
 
     const handleMyPageClick = (e) => {

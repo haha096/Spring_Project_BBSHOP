@@ -12,6 +12,7 @@ function AdminProductDetailForm() {
         image: null,
     });
     const [previewUrl, setPreviewUrl] = useState(null);
+    const token = localStorage.getItem("token");
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -46,6 +47,9 @@ function AdminProductDetailForm() {
 
         const response = await fetch("http://localhost:8080/api/admin/products", {
             method: "POST",
+            headers: {
+                Authorization: `Bearer ${token}`  // <-- 이 줄 추가 필요!
+            },
             body: formData
         });
 

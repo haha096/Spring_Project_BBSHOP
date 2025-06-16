@@ -24,6 +24,10 @@ public class UserPrincipal implements UserDetails {
         }
     }
 
+    public UserEntity getUser() {
+        return user;
+    }
+
     @Override public String getUsername() { return user.getUsername(); }
     @Override public String getPassword() { return user.getPassword(); }
     @Override public boolean isAccountNonExpired() { return true; }
