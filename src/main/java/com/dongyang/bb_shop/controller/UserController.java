@@ -66,11 +66,11 @@ public class UserController {
         return ResponseEntity.ok("환영합니다! " + loginUser + "님");
     }
 
-    @PostMapping("/logout")
-    public ResponseEntity<Void> logout(HttpSession session) {
-        session.invalidate(); // 세션 초기화 (로그아웃)
-        return ResponseEntity.ok().build();
-    }
+//    @PostMapping("/logout")
+//    public ResponseEntity<Void> logout(HttpSession session) {
+//        session.invalidate();
+//        return ResponseEntity.ok().build();
+//    }
 
 
     @GetMapping("/check")
@@ -132,7 +132,7 @@ public class UserController {
             return ResponseEntity.status(403).body("현재 비밀번호가 틀렸습니다.");
         }
 
-        // 🔑 새 토큰 재발급
+        //새 토큰 재발급
         String newToken = jwtUtil.generateToken(username, "ROLE_USER");
         return ResponseEntity.ok(Map.of("token", newToken));
     }
