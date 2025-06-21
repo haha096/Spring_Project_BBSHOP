@@ -3,6 +3,8 @@ package com.dongyang.bb_shop.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "users")
 @Getter
@@ -26,5 +28,13 @@ public class UserEntity {
 
     @Column(name = "is_admin")
     private boolean isAdmin;
+
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+    }
 
 }

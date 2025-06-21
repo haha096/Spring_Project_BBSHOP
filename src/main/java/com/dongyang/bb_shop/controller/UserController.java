@@ -146,4 +146,43 @@ public class UserController {
         }
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(false);
     }
+
+    //관리자계정에서 유저들을 볼 수 있는 리스트
+    @GetMapping("/all")
+    public ResponseEntity<?> getAllUsers(Authentication authentication) {
+        // 관리자 권한 확인
+        if (authentication == null || authentication.getAuthorities().stream()
+                .noneMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN"))) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("접근 권한이 없습니다.");
+        }
+
+        List<UserEntity> users = userRepository.findAll();
+
+        // 사용자 정보 중 비밀번호는 제거해서 응답 (보안)
+        List<UserDto> userDtos = users.stream()
+                .map(UserDto::new)
+                .toList();
+
+        return ResponseEntity.ok(userDtos);
+    }
+
+    //관리자계정에서 유저 탈퇴기능
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteUser(
+            @PathVariable Long id,
+            Authentication authentication
+    ) {
+        // 관리자 권한 확인
+        if (authentication == null || authentication.getAuthorities().stream()
+                .noneMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN"))) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("접근 권한이 없습니다.");
+        }
+
+        if (!userRepository.existsById(id)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당 유저가 존재하지 않습니다.");
+        }
+
+        userRepository.deleteById(id);
+        return ResponseEntity.ok("삭제 성공");
+    }
 }
