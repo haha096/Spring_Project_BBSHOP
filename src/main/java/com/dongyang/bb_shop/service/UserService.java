@@ -56,4 +56,8 @@ public class UserService {
         userRepository.save(user);
         return true;
     }
+
+    public Optional<UserEntity> findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
 }

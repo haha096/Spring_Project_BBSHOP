@@ -4,6 +4,7 @@ import com.dongyang.bb_shop.dto.UserDto;
 import com.dongyang.bb_shop.entity.UserEntity;
 import com.dongyang.bb_shop.jwt.JwtUtil;
 import com.dongyang.bb_shop.repository.UserRepository;
+import com.dongyang.bb_shop.service.MailService;
 import com.dongyang.bb_shop.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,7 @@ public class UserController {
     private final UserService userService;
     private final JwtUtil jwtUtil;
     private final UserRepository userRepository;
+    private final MailService mailService;
 
     @PostMapping("/signup")
     public ResponseEntity<Void> signup(@RequestBody UserDto dto) {
@@ -184,5 +186,24 @@ public class UserController {
 
         userRepository.deleteById(id);
         return ResponseEntity.ok("삭제 성공");
+    }
+
+
+    //이메일로 아이디 찾는 PostMapping
+    @PostMapping("/find-username")
+    public ResponseEntity<String> findUsername(@RequestBody Map<String, String> request) {
+        String email = request.get("email");
+        System.out.println("요청 받은 이메일: " + email);
+        Optional<UserEntity> userOpt = userService.findByEmail(email);
+
+        if (userOpt.isPresent()) {
+            String username = userOpt.get().getUsername();
+            System.out.println("찾은 아이디: " + username);
+            mailService.sendUsername(email, username);
+            return ResponseEntity.ok("아이디는 [" + username + "] 입니다.");
+        } else {
+            System.out.println("이메일에 해당하는 계정 없음");
+            return ResponseEntity.status(404).body("해당 이메일로 가입된 계정이 없습니다.");
+        }
     }
 }

@@ -15,6 +15,7 @@ import AdminProductRegister from "./Admin/AdminProductRegister";
 import AdminProductDetailForm from "./Admin/AdminProductDetailForm";
 import UpdateUsername from "./mypage/UpdateUsername";
 import UpdatePassword from "./mypage/UpdatePassword";
+import FindUsername from "./email/FindUsername";
 
 function App() {
     const location = useLocation();
@@ -28,6 +29,7 @@ function App() {
             <Route path="/mypage" element={<MyPage />} />
             <Route path="/updateusername" element={<UpdateUsername />} />
             <Route path="/updatepassword" element={<UpdatePassword />} />
+            <Route path="/findusername" element={<FindUsername />} />
 
             <Route path="/cart" element={<Cart />} />
             <Route path="/orders" element={<Orders />} />
